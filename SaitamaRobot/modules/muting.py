@@ -1,7 +1,7 @@
 import html
 from typing import Optional
 
-from SaitamaRobot import LOGGER, TIGERS, dispatcher
+from SaitamaRobot import LOGGER, TIGER_USERS, dispatcher
 from SaitamaRobot.modules.helper_funcs.chat_status import (
     bot_admin,
     can_restrict,
