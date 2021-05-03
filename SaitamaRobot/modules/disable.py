@@ -2,10 +2,10 @@ import importlib
 from typing import Union
 
 from future.utils import string_types
-from SaitamaRobot import dispatcher
-from SaitamaRobot.modules.helper_funcs.handlers import (CMD_STARTERS,
+from LaylaRobot import dispatcher
+from LaylaRobot.modules.helper_funcs.handlers import (CMD_STARTERS,
                                                         SpamChecker)
-from SaitamaRobot.modules.helper_funcs.misc import is_module_loaded
+from LaylaRobot.modules.helper_funcs.misc import is_module_loaded
 from telegram import ParseMode, Update
 from telegram.ext import (CallbackContext, CommandHandler, Filters,
                           MessageHandler, RegexHandler)
@@ -16,9 +16,9 @@ FILENAME = __name__.rsplit(".", 1)[-1]
 # If module is due to be loaded, then setup all the magical handlers
 if is_module_loaded(FILENAME):
 
-    from SaitamaRobot.modules.helper_funcs.chat_status import (
+    from LaylaRobot.modules.helper_funcs.chat_status import (
         connection_status, is_user_admin, user_admin)
-    from SaitamaRobot.modules.sql import disable_sql as sql
+    from LaylaRobot.modules.sql import disable_sql as sql
     from telegram.ext.dispatcher import run_async
 
     DISABLE_CMDS = []
@@ -56,16 +56,12 @@ if is_module_loaded(FILENAME):
                                 command[1].lower()
                                 == message.bot.username.lower()):
                             return None
-                        chat = update.effective_chat
-                        user = update.effective_user
-                        if user.id == 1087968824:
-                            user_id = chat.id
-                        else:
-                            user_id = user.id
-                        if SpamChecker.check_user(user_id):
+                        if SpamChecker.check_user(update.effective_user.id):
                             return None
                         filter_result = self.filters(update)
                         if filter_result:
+                            chat = update.effective_chat
+                            user = update.effective_user
                             # disabled, admincmd, user admin
                             if sql.is_command_disabled(chat.id,
                                                        command[0].lower()):
@@ -161,7 +157,7 @@ if is_module_loaded(FILENAME):
         args = context.args
         chat = update.effective_chat
         if len(args) >= 1:
-            disable_module = "SaitamaRobot.modules." + args[0].rsplit(".", 1)[0]
+            disable_module = "LaylaRobot.modules." + args[0].rsplit(".", 1)[0]
 
             try:
                 module = importlib.import_module(disable_module)
@@ -234,7 +230,7 @@ if is_module_loaded(FILENAME):
         chat = update.effective_chat
 
         if len(args) >= 1:
-            enable_module = "SaitamaRobot.modules." + args[0].rsplit(".", 1)[0]
+            enable_module = "LaylaRobot.modules." + args[0].rsplit(".", 1)[0]
 
             try:
                 module = importlib.import_module(enable_module)
@@ -344,7 +340,7 @@ if is_module_loaded(FILENAME):
     • `/listcmds`*:* list all possible toggleable commands
     """
 
-    __mod_name__ = "Command disabling"
+    __mod_name__ = "Disabling"
 
 else:
     DisableAbleCommandHandler = CommandHandler
